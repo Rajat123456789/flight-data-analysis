@@ -1,0 +1,447 @@
+<div style="text-align: center;margin-top: 40px;">
+  <span style="font-size: 40px;">**Final Project : Passengers' Airlines Analysis**</span>
+</div>
+
+<div style="text-align: right; margin-bottom: 70px;">
+  <span style="font-size: 20px;">_Rajat Sanjay Sharma_</span>
+</div>
+
+
+<style>
+body {
+text-align: justify;
+font-family: "Times New Roman", Times, serif;
+font-size: 16px;
+}
+</style>
+
+># Introduction
+*Customer satisfaction in air travel*
+This dataset contains an airline passenger satisfaction survey and factors that are considered range from whether a customer is a frequent flyer to how much the flight is delayed. The services are rated on a scale from 1 to 5. 
+
+>*Why is this necessary?*
+It is necessary to understand about passenger demands and how and what are the main aspects to that passengers focus on to make sure they have a decent experience while flying. 
+
+
+># Libraries and imports
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+getwd()
+setwd("~/Desktop/My Documents/ISE/")
+df <- read.csv("airlines-data.csv")
+
+head(df)
+first_row <- df[1, ]
+
+first_row
+
+```
+
+```{r}
+library(tidyverse)
+
+
+```
+
+```{r}
+first_row <- df[1, ]
+
+first_row
+```
+
+
+># Data Source 
+[_data_](https://www.kaggle.com/datasets/teejmahal20/airline-passenger-satisfaction/data)
+The dataset was obtained from an unspecified source, and details about its origin are not provided. It was found on kaggle.
+
+
+># Data Collection
+The data is found from Kaggle and its 4 years old and it is a part of a survey conducted of the passengers travelling that year. The data appears to be observational, as it represents customer records in a travel-related context. The exact date and method of data collection are not specified in the dataset.
+
+
+># Cases
+The scale of measure for a particular service is from 1 to 5 for services that are available and 0 for the services that arent available.
+Categorical parameters like class of travel and aim of travel is either business, or economy and leisure or business.
+
+># Variables
+
+We are interested in studying the following variables:
+
+- id
+- Gender
+- Customer Type
+- Age
+- Type of Travel
+- Class
+- Flight Distance
+- Inflight wifi service
+- Departure/Arrival time convenient
+- Ease of Online booking
+- Gate location
+- Food and drink
+- Online boarding
+- Seat comfort
+- Inflight entertainment
+- On-board service
+- Leg room service
+- Baggage handling
+- Checkin service
+- Inflight service
+- Cleanliness
+- Departure Delay in Minutes
+- Arrival Delay in Minutes
+- Satisfaction
+
+># Descriptions of the variables
+
+1. id: A unique identifier for each survey response.
+2. Gender: The gender of the survey respondent (e.g., Male, Female).
+3. Customer Type: Indicates whether the respondent is a "Loyal Customer" or a "Disloyal Customer."
+4. Age: The age of the survey respondent.
+5. Type of Travel: Specifies the purpose of the trip, such as "Business Travel" or "Personal Travel."
+6. Class: The class of service chosen by the passenger (e.g., Economy, Business, First Class).
+7. Flight Distance: The distance in miles for the flight.
+8. Inflight wifi service: A rating of the inflight Wi-Fi service provided by the airline.
+9. Departure/Arrival time convenient: A rating of the convenience of departure and arrival times.
+10. Ease of Online booking: A rating of the ease of booking a flight online.
+11. Gate location: A rating of the convenience of gate locations at the airport.
+12. Food and drink: A rating of the quality and availability of food and beverages during the flight.
+13. Online boarding: A rating of the ease of the online boarding process.
+14. Seat comfort: A rating of the comfort of the seats on the flight.
+15. Inflight entertainment: A rating of the entertainment options available during the flight.
+16. On-board service: A rating of the service provided by the airline staff during the flight.
+17. Leg room service: A rating of the legroom space on the flight.
+18. Baggage handling: A rating of the handling and delivery of baggage.
+19. Check-in service: A rating of the check-in process at the airport.
+20. Inflight service: A rating of the overall inflight service experience.
+21. Cleanliness: A rating of the cleanliness of the aircraft.
+22. Departure Delay in Minutes: The number of minutes of departure delay for the flight.
+23. Arrival Delay in Minutes: The number of minutes of arrival delay for the flight.
+24. Satisfaction: The overall satisfaction level of the passenger with the airline's services.
+
+># Type of study
+The type of study will be experimental. 
+
+
+># Units of Observation
+Each row in the dataset represents a single customer's experience with various attributes related to their travel.
+
+
+># Data quality
+
+```{r}
+sum(is.na(df))
+```
+
+
+```{r}
+sum(duplicated(df))
+```
+
+83/25977 is less than 0.31% of missing value. 
+
+And also, there are zero duplicate values.
+
+So the data quality is very good.
+
+># Exploratory Data Analysis
+
+```{r}
+# Summary statistics
+summary(df)
+ggplot(df, aes(x = satisfaction)) +
+  geom_bar() +
+  xlab("Satisfaction") +
+  ylab("Count") +
+  ggtitle("Distribution of Customer Satisfaction")
+```
+
+There are more number of unsatisfied customers than  satisfied although the gap isnt too much.
+
+
+```{r}
+ggplot(df, aes(x = Age)) +
+  geom_histogram(binwidth = 5) +
+  xlab("Age") +
+  ylab("Count") +
+  ggtitle("Distribution of Customer Age")
+```
+
+
+The maximum number people who participated in the survey have an age of 37.5 to 40 followed by the age group 25.
+
+```{r}
+ggplot(df, aes(x = Class, fill = satisfaction)) +
+  geom_bar(position = "dodge") +
+  xlab("Class") +
+  ylab("Count") +
+  ggtitle("Class vs. Customer Satisfaction")
+```
+
+The maximum satisfaction of customers is in business class, which is not surprising as the services it offers even though expensive are very good and people who can afford these have no issues in spending premium for a seamless experience.
+
+```{r}
+summary(df$Flight.Distance)
+ggplot(df, aes(x = satisfaction, y = Flight.Distance)) +
+  geom_boxplot(fill = "blue", alpha = 0.7) +
+  xlab("Satisfaction") +
+  ylab("Flight Distance") +
+  ggtitle("Flight Distance vs. Satisfaction")
+```
+
+Satisfied customers tend to have a longer flight distance, this might be due to the fact that a longer flight means better in flight service for a longer time and better meals served.
+
+```{r}
+ggplot(df, aes(x = Flight.Distance, fill = satisfaction)) +
+  geom_histogram(binwidth = 50, position = "dodge") +
+  xlab("Flight Distance") +
+  ylab("Count") +
+  ggtitle("Flight Distance Histograms by Satisfaction")
+```
+
+
+This graph shows that satisfaction is more for longer distances, even for economy class thats maybe because longer distance means food will be served throughout the flight and thats better for a better customer service.
+
+># Hypotheses Testing 
+
+**Hypothesis 1** 
+ 
+ Is there a significant difference in satisfaction between Business and Eco class travelers?
+
+```{r}
+ggplot(df, aes(x = satisfaction, fill = Class)) +
+  geom_bar(position = "dodge") +
+  labs(title = "Satisfaction Count by Class",
+       x = "Satisfaction",
+       y = "Count") +
+  scale_fill_manual(values = c("Eco" = "blue", "Business" = "green")) +
+  theme_minimal()
+
+```
+
+```{r}
+business <- df[df$Class == "Business", ]
+eco <- df[df$Class == "Eco", ]
+
+# Conduct t-test for satisfaction between Business and Economy class travelers
+t_test_result <- t.test(business$satisfaction == "satisfied", eco$satisfaction == "satisfied")
+
+# Print the t-test result
+print(t_test_result)
+
+```
+
+
+The Welch Two Sample t-test is a statistical test used to determine if there is a significant difference between the means of two independent groups, considering the assumption of unequal variances and possibly unequal sample sizes.
+
+The output you provided indicates the following:
+
+t-value: 91.822
+Degrees of Freedom (df): 24857
+p-value: < 2.2e-16 (practically zero, very small)
+
+Conclusions:
+
+t-value: The t-value of 90.801 is very large, indicating a substantial difference between the mean satisfaction levels of Business and Economy class travelers.
+
+Degrees of Freedom: With a large number of degrees of freedom (23925), the estimation becomes highly reliable.
+
+p-value: The p-value is extremely small, indicating strong evidence against the null hypothesis (i.e., the true difference in means of satisfaction between Business and Economy class travelers is equal to zero).
+
+Confidence Interval: The 95% confidence interval for the difference in means ranges from 0.48 to 0.504. Since this interval does not contain zero, it suggests a significant difference in satisfaction levels between Business and Economy class travelers.
+
+Conclusion: Based on the results of the Welch Two Sample t-test and the very small p-value, we can confidently conclude that there is a statistically significant difference in satisfaction levels between Business and Economy class travelers. The mean satisfaction level of Business class travelers (0.6951581) is notably higher than that of Economy class travelers (0.2015).
+
+
+
+**Hypothesis Testing 2**
+
+2. Does the Inflight wifi service affect customer satisfaction?
+ 
+```{r}
+
+# Reorder the levels of 'Inflight.wifi.service' in ascending order
+wifi_service_levels <- unique(df$Inflight.wifi.service)
+wifi_service_levels <- factor(wifi_service_levels, levels = unique(wifi_service_levels))
+
+# Count satisfied and dissatisfied customers for each wifi service level
+satisfied_count <- table(df$Inflight.wifi.service[df$satisfaction == "satisfied"])
+dissatisfied_count <- table(df$Inflight.wifi.service[df$satisfaction == "neutral or dissatisfied"])
+
+# Create a dataframe combining counts of satisfied and dissatisfied customers
+satisfaction_counts <- data.frame(
+  Inflight.wifi.service = wifi_service_levels,
+  Satisfied = ifelse(wifi_service_levels %in% names(satisfied_count), satisfied_count, 0),
+  Dissatisfied = ifelse(wifi_service_levels %in% names(dissatisfied_count), dissatisfied_count, 0)
+)
+
+# Plotting the bar graph
+barplot(
+  t(as.matrix(satisfaction_counts[, -1])),
+  beside = TRUE,
+  legend = TRUE,
+  col = c("lightgreen", "orange"),
+  main = "Number of Satisfied and Dissatisfied Customers by Inflight Wifi Service Level",
+  xlab = "Inflight Wifi Service Level",
+  ylab = "Number of Customers",
+  names.arg = satisfaction_counts$Inflight.wifi.service
+)
+
+
+```
+ 
+```{r}
+
+
+contingency_table <- table(df$Inflight.wifi.service, df$satisfaction)
+
+chi_squared_test <- chisq.test(contingency_table)
+
+print(chi_squared_test)
+
+
+```
+ We conducted a Pearson's Chi-squared test to analyze the association between the levels of inflight wifi service and customer satisfaction. The test revealed a highly significant relationship. Thus, we conclude that there is a strong association between these variables. Inflight wifi service levels significantly impact customer satisfaction.
+ 
+**Hypothesis Testing 3**
+
+ 3. Do Loyal Customers tend to be more satisfied compared to Disloyal Customers?
+```{r}
+
+satisfied <- df[df$satisfaction == "satisfied", ]
+dissatisfied <- df[df$satisfaction == "neutral or dissatisfied", ]
+
+# Count the number of satisfied and dissatisfied customers for each customer type
+satisfied_count <- table(satisfied$Customer.Type)
+dissatisfied_count <- table(dissatisfied$Customer.Type)
+
+# Merge counts into a single data frame
+loyalty_satisfaction_counts <- data.frame(
+  Customer.Type = names(satisfied_count),
+  Satisfied = as.numeric(satisfied_count),
+  Dissatisfied = as.numeric(dissatisfied_count)
+)
+
+# Plotting the bar graph
+barplot(
+  t(as.matrix(loyalty_satisfaction_counts[, -1])),
+  beside = TRUE,
+  legend = TRUE,
+  col = c("lightgreen", "orange"),
+  main = "Number of Satisfied and Dissatisfied Customers by Loyalty",
+  xlab = "Customer Type",
+  ylab = "Number of Customers",
+  names.arg = loyalty_satisfaction_counts$Customer.Type
+)
+
+```
+
+
+
+```{r}
+loyal_customers <- df[df$Customer.Type == "Loyal Customer", ]
+disloyal_customers <- df[df$Customer.Type == "disloyal Customer", ]
+
+# Calculate average satisfaction for loyal and disloyal customers
+avg_satisfaction_loyal <- mean(loyal_customers$satisfaction == "satisfied")
+avg_satisfaction_disloyal <- mean(disloyal_customers$satisfaction == "satisfied")
+
+# Print average satisfaction for both groups
+cat("Average satisfaction for loyal customers:", avg_satisfaction_loyal, "\n")
+cat("Average satisfaction for disloyal customers:", avg_satisfaction_disloyal, "\n")
+
+# Perform t-test to compare satisfaction between loyal and disloyal customers
+t_test_result <- t.test(df$`satisfaction` == "satisfied" ~df$Customer.Type)
+print(t_test_result)
+
+```
+
+
+The Welch Two Sample t-test performed on the dataset provides us with several insights. Here's a breakdown of the results and their implications:
+
+t-value and Degrees of Freedom (df):
+
+The t-value obtained from the test is -32.15, and the degrees of freedom are approximately 7950.1.
+The high magnitude of the t-value suggests a substantial difference between the mean satisfaction levels of disloyal and loyal customers.
+P-value:
+
+The p-value obtained (p-value < 2.2e-16, which is practically zero) indicates strong evidence against the null hypothesis.
+A p-value less than any conventional significance level (e.g., 0.05) signifies that there is an extremely low probability of observing such a substantial difference in satisfaction between disloyal and loyal customers if there were no true difference between the groups.
+Confidence Interval (CI):
+
+The 95% confidence interval for the difference in means between disloyal and loyal customers ranges from approximately -0.244 to -0.216.
+Since this interval does not include zero, it suggests that the true difference in mean satisfaction levels between the two customer types is significantly negative.
+Sample Estimates:
+
+The mean satisfaction for disloyal customers is estimated to be around 0.252, whereas the mean satisfaction for loyal customers is estimated to be around 0.481.
+The considerable difference in mean satisfaction levels (about 0.229) indicates that, on average, loyal customers tend to have significantly higher satisfaction compared to disloyal customers in this dataset.
+Conclusions:
+
+There is strong statistical evidence to support the claim that loyal customers tend to be significantly more satisfied compared to disloyal customers in the context of this dataset.
+This indicates that customer loyalty might be positively correlated with higher levels of satisfaction based on the features and factors considered in this analysis.
+
+># Multiple Regression
+
+Y=β0+β1𝑋1+β2𝑋2+βk𝑋k+𝜖
+
+Y=β0+β1𝑋1+β2𝑋2+βk𝑋k+𝜖
+
+Here, Y is the dependent variable, while the independent variables are X1,…,Xn. Regression analysis guarantees that the dependent variable may be predicted as accurately as possible from the collection of independent variables when computing the weights, a, b1,…, bn. Most often, least squares estimate is used for this.
+
+
+```{r}
+
+model <- lm(df$Flight.Distance ~ df$On.board.service +df$satisfaction+df$Customer.Type+df$Inflight.wifi.service +df$Class + df$Customer.Type, data = df)
+summary(model)
+
+
+```
+
+Customer Type (Loyal Customer) (471.890): Loyal customers tend to travel a longer distance compared to other customer types.
+In-flight Wi-Fi service (-20.972): An increase in the quality of in-flight Wi-Fi service is associated with a decrease in flight distance.
+Class (Economyand Business): Both classes significantly impact flight distance. Economy is associated with a decrease in flight distance compared to  Business.
+Analysis:
+Model Fit: The model's goodness of fit has improved compared to the previous model (R-squared = 0.2557), indicating that these additional predictors explain around 25.6% of the variability in flight distance.
+
+Significant Predictors: Satisfaction, customer type, in-flight Wi-Fi service, and class are statistically significant predictors of flight distance. However, on-board service is not significantly associated with flight distance in this model.
+
+Interpretation: Satisfaction, being a loyal customer, and having better in-flight Wi-Fi service positively influence flight distance. However, traveling in Economy or Economy Plus classes is associated with a decrease in the expected distance traveled compared to other class types, which might reflect shorter distances typically associated with these classes.
+
+
+```{r}
+confint(model)
+
+```
+
+```{r}
+par(mfrow=c(2,2))
+```
+
+```{r}
+plot(model)
+
+```
+
+># Conclusion
+
+Exploratory Data Analysis (EDA): The initial exploratory data analysis revealed various trends and distributions within the dataset. Notably, there seemed to be more unsatisfied customers than satisfied ones. The age distribution of survey participants showed a concentration around the age groups of 37.5 to 40 and 25. Moreover, customer satisfaction appeared to be higher in Business class compared to Economy class. Additionally, satisfied customers tended to have longer flight distances, indicating a potential correlation between flight duration and satisfaction.
+
+Hypothesis Testing:
+
+Hypothesis 1: Satisfaction Difference between Business and Economy Class Travelers: The Welch Two Sample t-test suggested a significant difference in satisfaction levels between Business and Economy class travelers. Business class travelers demonstrated notably higher satisfaction compared to Economy class travelers.
+
+Hypothesis 2: Impact of Inflight Wi-Fi Service on Satisfaction: The Chi-squared test showed a strong association between levels of inflight Wi-Fi service and customer satisfaction. This indicates that the quality of inflight Wi-Fi significantly influences customer satisfaction.
+
+Hypothesis 3: Satisfaction Comparison between Loyal and Disloyal Customers: The t-test indicated a substantial difference in satisfaction levels between loyal and disloyal customers. Loyal customers tended to be significantly more satisfied compared to disloyal customers.
+
+Multiple Regression Analysis: The regression model was utilized to predict flight distance based on several predictor variables. The model demonstrated that factors like being a loyal customer, higher satisfaction, better in-flight Wi-Fi service, and traveling in specific classes significantly influenced flight distance. Notably, being a loyal customer was associated with traveling longer distances, while better in-flight Wi-Fi service was linked to shorter flight distances.
+
+In conclusion, the analysis highlighted the importance of various factors in influencing customer satisfaction in the airline industry. Business class travel, improved inflight Wi-Fi service, and customer loyalty were strongly correlated with higher satisfaction levels. Additionally, the regression analysis identified several predictors influencing flight distance, offering insights into factors affecting the distance traveled by passengers.
+
+
+># References
+The dataset is obtained from Kaggle and the dataset used is in public domain and can be used to do research and hence chosen.It was made in 2019, 4 years back. 
+
+
+
