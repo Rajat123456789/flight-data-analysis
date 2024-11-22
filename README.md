@@ -30,7 +30,8 @@ It includes:
 - 👥 Passenger demographics  
 - 🎟️ Travel class and purpose  
 - 🍽️ Inflight services (Wi-Fi, food, entertainment)  
-- ⏳ Flight delays and satisfaction ratings  
+- ⏳ Flight delays and satisfaction ratings
+
 
 ---
 
@@ -67,6 +68,24 @@ It includes:
 1. 🏆 **Class vs. Satisfaction:** Business class passengers showed higher satisfaction than Economy.  
 2. 📡 **Inflight Wi-Fi Service:** Better Wi-Fi quality strongly correlated with higher satisfaction.  
 3. ❤️ **Customer Loyalty:** Loyal customers were significantly more satisfied.  
+
+![Results](11.png)
+
+![Results](22.png)
+
+![Results](33.png)
+
+![Results](44.png)
+
+![Results](55.png)
+
+![Results](66.png)
+
+![Results](77.png)
+
+![Results](88.png)
+
+![Results](99.png)
 
 ---
 
